@@ -1,0 +1,78 @@
+
+.principal{
+    margin-top: 40px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 9rem;
+}
+
+.principal:not(:first-child):before {
+    content: '';
+    background-color: #042958; /* bg-slate-200 */
+    position: absolute;
+    width: 100%; /* w-full */
+    height: 3px; /* h-[3px] */
+    right: 35%; /* right-2/4 */
+    top: 15%; /* top-1/3 */
+    transform: translateY(-50%);
+  }
+
+.itemicon {
+    width: 2.5rem; /* 10 * 0.25rem */
+    height: 2.5rem; /* 10 * 0.25rem */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    position: relative;
+    background-color: #ffffff; /* bg-slate-700 */
+    border-radius: 9999px; /* rounded-full */
+    font-weight: 600; /* font-semibold */
+    color: #ffffff; /* text-white */
+    
+  }
+
+
+  .active .itemicon {
+    background-color: #0284c7; /* bg-sky-600 */
+  }
+  
+  .complete .itemicon {
+    background-color: #16a34a; /* bg-green-600 */
+  }
+  
+  .complete p {
+    color: #ffffff; /* text-white */
+  }
+  
+  .complete:not(:first-child):before,
+  .active:not(:first-child):before {
+    background-color: #16a34a; /* bg-green-600 */
+  }
+
+
+
+  
+.inputs{
+    width: 60%;
+}
+
+.contenido{
+    width: 20%;
+    margin: 50px 10px 20px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+}
+
+.porcentajes{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}

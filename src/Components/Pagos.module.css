@@ -1,0 +1,35 @@
+.principal{
+    height: 400px;
+    width: 750px;
+    background-color: #FFFFFF;
+}
+
+header{
+   
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    padding:0 10px 0 10px;
+    border-bottom: solid 1px;
+    border-color: #F1F5F9
+}
+
+.Grouptitulo{
+    color: #FF7A66;
+    width: max-content;
+    font-size: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content:left;
+    align-items: center;
+    gap: 10px;
+
+}
+
+.info{
+    display: flex;
+    flex-direction: row;   
+}
+
+
+
