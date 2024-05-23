@@ -9,7 +9,6 @@ import { Cursor } from 'phosphor-react';
 
 function Infopago({Activo, Deuda}) {
 
-  //<span>{porcent%items.length===0?Math.trunc(porcentaje):porcentaje.toFixed(1)}</span>
   const [items,setItems] =useState([
     {
       detalle:'Anticipo',
@@ -18,8 +17,10 @@ function Infopago({Activo, Deuda}) {
       fecha:'2023-05-18',
     }]);
 
-  
   const[porcent,setPortcent] = useState(100);
+  const [currentDate, setCurrentDate] = useState('');
+  const [ActiveIndex,setActiveIndex] = useState(null);
+  const[ActivePopup,setActivePopup] = useState(false);
 
   const afterIndex=(index, newItem,porcentual)=>{
     
@@ -35,55 +36,83 @@ function Infopago({Activo, Deuda}) {
     setItems(prevItems=>prevItems.map(item=>({
       ...item, valor:(Deuda*(porcentual/100)).toFixed(1)
     })));
+
+    console.log(items);
   }
   
   const restarporcentaje = (index,porcentual)=>{
+    setItems(prevItems=>{
+    const newItem =[...prevItems];
+      
+        if (newItem[index]===newItem[0]) {
+          newItem[index+1]={
+            ...newItem[index+1],porcentaje:parseInt(newItem[index + 1].porcentaje)+1
+          };
+          newItem[index]={
+            ...newItem[index],porcentaje:parseInt(newItem[index].porcentaje)-1
+          };
+          
+        }
+          
+         else  {
+          newItem[index]={
+            ...newItem[index],porcentaje:parseInt(newItem[index].porcentaje)-1
+          };
+          newItem[index-1]={
+            ...newItem[index-1],porcentaje:parseInt(newItem[index - 1].porcentaje)+1
+          };
+        }
+        
+     
+      
+      return newItem;
+    })
+  }
+
+  const sumarporcentaje = (index,porcentual)=>{
  
     setItems(prevItems=>{
   const newItem =[...prevItems];
-      if(index >= 0 && index <newItem.leght){
+      
 
-        newItem[index]={
-          ...newItem[index],porcentaje:newItem[index].porcentaje-1
-        };
-        
-      
-      }
-      if (index + 1 <newItem.leght) {
-        
-        newItem[index+1]={
-          ...newItem[index+1],porcentaje:newItem[index + 1].porcentaje+1
-        };
-       
-      }
-      return newItem;
-    })
+  if (newItem[index]===newItem[0]) {
+    newItem[index+1]={
+      ...newItem[index+1],porcentaje:parseInt(newItem[index + 1].porcentaje)-1,valor:Deuda*(newItem[index].porcentaje/100)
+    };
+    newItem[index]={
+      ...newItem[index],porcentaje:parseInt(newItem[index].porcentaje)+1,
+    };
 
-     
-        
-      
-      
     
   }
+    
+   else  {
+    newItem[index]={
+      ...newItem[index],porcentaje:parseInt(newItem[index].porcentaje)+1
+    };
+    newItem[index-1]={
+      ...newItem[index-1],porcentaje:parseInt(newItem[index - 1].porcentaje)-1
+    };
+  }
+      
+      return newItem;
+    })
+ 
+  }
 
-  
-
-
-
-  const [currentDate, setCurrentDate] = useState('');
-
-  const [ActiveIndex,setActiveIndex]=useState(null)
   const clicIndex = (index) => {
     setActiveIndex(index);
+    setActivePopup(!ActivePopup)
   }
+  
+  const date =new Date().toISOString().split('T')[0];
   
 
   useEffect(() => {
-    const today = new Date(); 
+    const today =new Date();
     const formattedDate = today.toISOString().split('T')[0];
     setCurrentDate(formattedDate);
   }, []);
-  
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center'}}>
@@ -91,23 +120,25 @@ function Infopago({Activo, Deuda}) {
           
           <React.Fragment key={index} >
             <div className={styles.principal}>
-              <MdModeEdit onClick={() => clicIndex(index)}  className={styles.itemicon} style={{ padding: 3, fontSize: 30, textAlign: 'center', color: ActiveIndex===index ? '#FF7A66': '#FFF' , border: 'solid 3px', borderColor: '#FF7A66', borderRadius: '80%' }} />
-              <input disabled={!Activo && ActiveIndex !== index || !Activo && !ActiveIndex ===index} className={styles.inputs} type="text" id="fname" name="fname" placeholder="Anticipo" defaultValue={item.detalle} />
-              <input disabled={!Activo && ActiveIndex !== index || !Activo && !ActiveIndex ===index} className={styles.inputs} type="text" id="fname" name="fname" placeholder="54,5" defaultValue={item.valor} />
+              <MdModeEdit onClick={() => clicIndex(index)}  className={styles.itemicon} style={{ padding: 3, fontSize: 30, textAlign: 'center', border: 'solid 3px', borderColor: '#FF7A66', borderRadius: '80%' }} />
+              <input disabled={!Activo } className={styles.inputs} type="text" id="fname" name="fname" placeholder="Anticipo"  value={item.detalle} />
+              <input disabled={!Activo} className={styles.inputs} type="text" id="fname" name="fname" placeholder="54,5" value={(Deuda*(item.porcentaje/100).toFixed(2))} />
               <div className={styles.porcentajes}>
-                <AiOutlineMinusCircle onClick={()=>restarporcentaje(index,item.porcentaje)} style={{cursor:'pointer'}}/>
-                <span>{item.porcentaje}</span>
+                <AiOutlineMinusCircle onClick={()=>restarporcentaje(index,item.porcentaje)} style={{visibility:!Activo?'hidden':'visible', cursor:'pointer'}}/>
+                <span>{item.porcentaje}%</span>
                 
-                <AiOutlinePlusCircle style={{cursor:'pointer'}}/>
+                <AiOutlinePlusCircle onClick={() => sumarporcentaje(index,item.porcentaje)} style={{visibility:!Activo?'hidden':'visible', cursor:'pointer'}}/>
               </div>
               <span>Vence</span>
               <span></span>
-              <input type="date" id="start" name="trip-start" value={currentDate} min='' max="" onChange={(e) => setCurrentDate(e.target.value)}/>
+              <input type="date" id="start" disabled={!Activo} name="trip-start" value={currentDate} min={date} max="" onChange={(e) => setCurrentDate(e.target.value)}/>
             </div>
             {index <= (items.length-1) && <AiOutlinePlusCircle onClick={()=>afterIndex(index,{detalle:'pago '+ (index + 1), valor:100,porcentaje:porcent/(items.length+1),fecha:'2023-05-18',},100/(items.length+1))} className={styles.separadorsum} style={{ marginLeft:items.length===1? 70 : 0,marginTop: '50px', fontSize: '35px', color: '#FF7A66' }} />}
 
-          </React.Fragment>
+          </React.Fragment>   
         ))}
+
+        <Popup show={ActivePopup} onClose={ActivePopup} />
       </div>
       )
   

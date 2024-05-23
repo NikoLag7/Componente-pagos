@@ -39,6 +39,9 @@
     color: #ffffff; 
     
   }
+  .itemicon:hover{
+    color: #FF7A66;
+  }
 
   .separadorsum{
     
