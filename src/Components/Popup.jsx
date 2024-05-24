@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
 import './Popup.module.css'; 
 import { GoX } from "react-icons/go";
 
 
-const Popup = ({ show, onClose, pagado, tipoPago}) => {
+const Popup = ({ show, onClose, pagado, tipoPago, setpago}) => {
  
  
     if (!show) {
@@ -21,7 +20,7 @@ const Popup = ({ show, onClose, pagado, tipoPago}) => {
         </div>
         <h2>Pagar</h2>
         <p>Selecciona metodo de pago</p>
-        <select name="cars" id="dropdown" value={tipoPago} onChange={tipoPago}>
+        <select name="cars" id="dropdown" value={setpago} onChange={tipoPago}>
             <option value="Efectivo">Efectivo</option>
             <option value="Tarjeta">Tarjeta</option>
         </select>
