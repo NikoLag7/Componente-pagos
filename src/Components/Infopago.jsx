@@ -128,6 +128,7 @@ function Infopago({Activo, Deuda}) {
       };
       return newItem;
     })
+    setActivePopup(!ActivePopup)
   }
 
 
@@ -143,6 +144,7 @@ function Infopago({Activo, Deuda}) {
     setCurrentDate(formattedDate);
   }, []);
 
+  
   return (
     <div>
       <Popup show={ActivePopup} tipoPago={OpcionPago} setpago={tipopago} pagado={()=>realizarPago(ActiveIndex)} onClose={()=>activarPopup()} />
@@ -152,16 +154,16 @@ function Infopago({Activo, Deuda}) {
           <React.Fragment key={index}  >
             <div className={styles.principal} >
               {item.pagado===true?<span style={{padding:5,margin:5, backgroundColor:'#10B981', borderRadius:'80%'}}>🎉</span>:<MdModeEdit onClick={ ()=>activarPopup(index)}  className={styles.itemicon} style={{ padding: 3, fontSize: 30, textAlign: 'center', border: 'solid 3px', borderColor: '#FF7A66', borderRadius: '80%' }} />}
-              <input disabled={!Activo } className={styles.inputs} type="text" id="fname" name="fname" placeholder="Anticipo"  value={item.detalle} />
-              <input disabled={!Activo} className={styles.inputs} type="text" id="fname" name="fname" placeholder="54,5" value={(Deuda*(item.porcentaje/100).toFixed(2))} />
+              {item.pagado===true?<input disabled className={styles.inputs} type="text" id="fname" name="fname" placeholder="Anticipo"  value={item.detalle} />:<input disabled={!Activo} className={styles.inputs} type="text" id="fname" name="fname" placeholder="Anticipo"  value={item.detalle} />}
+              {item.pagado===true?<input disabled className={styles.inputs} type="text" id="fname" name="fname" placeholder="54,5" value={(Deuda*(item.porcentaje/100).toFixed(2))} />:<input disabled={!Activo} className={styles.inputs} type="text" id="fname" name="fname" placeholder="54,5" value={(Deuda*(item.porcentaje/100).toFixed(2))} />}
               <div className={styles.porcentajes}>
-                <AiOutlineMinusCircle onClick={()=>restarporcentaje(index,item.porcentaje)} style={{visibility:!Activo?'hidden':'visible', cursor:'pointer'}}/>
+                <AiOutlineMinusCircle onClick={()=>restarporcentaje(index,item.porcentaje)} style={{visibility:item.pagado===true || !Activo || ActivePopup?'hidden':'visible', cursor:'pointer'}}/>
                 <span>{item.porcentaje}%</span>
-                <AiOutlinePlusCircle onClick={() => sumarporcentaje(index,item.porcentaje)} style={{visibility:!Activo?'hidden':'visible', cursor:'pointer'}}/>
+                <AiOutlinePlusCircle onClick={() => sumarporcentaje(index,item.porcentaje)} style={{visibility:item.pagado===true || !Activo || ActivePopup?'hidden':'visible', cursor:'pointer'}}/>
               </div>
               <span>Vence </span>
-              <input type="date" id="start" disabled={!Activo} name="trip-start" value={currentDate} min={date} max="" onChange={(e) => setCurrentDate(e.target.value)}/>
-              <span style={{fontSize:10, color:'#059669',visibility:item.pagado !== true?'collapse':'visible'}}>Pagado {new Date().toLocaleDateString()} con {item.tipoPago} </span>
+              <input type="date" id="start" disabled={!Activo || item.pagado===true} name="trip-start" value={currentDate} min={date} max="" onChange={(e) => setCurrentDate(e.target.value)}/>
+              <span style={{fontSize:10, color:'#059669',visibility:item.pagado !== true || ActivePopup?'collapse':'visible'}}>Pagado {new Date().toLocaleDateString()} con {item.tipoPago} </span>
             </div>
             {index <= (items.length-1) && <AiOutlinePlusCircle onClick={()=>afterIndex(index,{detalle:'pago '+ (index + 1), valor:100, porcentaje:(porcent-filteredItemTrue)/(items.length+1),fecha:'2023-05-18',pagado:false},(100 - !filteredItemTrue)/(items.length+1))} className={styles.separadorsum} style={{ marginLeft:items.length===1? 70 : 0,marginTop: '50px', fontSize: '35px', color: '#FF7A66' }} />}
 

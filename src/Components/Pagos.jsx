@@ -13,6 +13,7 @@ function Pagos( Activo) {
 
  const [isActive,setIsActive] = useState(false);
  const Activar =() =>{
+  
   setIsActive(!isActive)
 
  }
